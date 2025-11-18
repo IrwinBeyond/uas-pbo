@@ -271,19 +271,31 @@ public class Main {
             return;
         }
 
-        for (int i = 0; i < invoices.size(); i++) {
-            Invoice inv = invoices.get(i);
+        List<Invoice> unpaidInvoices = new ArrayList<>();
+        for (Invoice inv : invoices) {
+            if (!inv.isPaid()) {
+                unpaidInvoices.add(inv);
+            }
+        }
+
+        if (unpaidInvoices.isEmpty()) {
+            System.out.println("Semua invoice sudah lunas. Tidak ada invoice yang perlu dibayar.");
+            return;
+        }
+
+        for (int i = 0; i < unpaidInvoices.size(); i++) {
+            Invoice inv = unpaidInvoices.get(i);
             System.out.println((i + 1) + ". " + inv +
                     " | amountDue=" + inv.getAmountDue());
         }
 
         int idx = readInt("Pilih nomor invoice: ") - 1;
-        if (idx < 0 || idx >= invoices.size()) {
+        if (idx < 0 || idx >= unpaidInvoices.size()) {
             System.out.println("Pilihan invoice tidak valid.");
             return;
         }
 
-        Invoice selectedInvoice = invoices.get(idx);
+        Invoice selectedInvoice = unpaidInvoices.get(idx);
 
         String amountStr = readLine("Masukkan jumlah pembayaran: ");
         BigDecimal amount;
